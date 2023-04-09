@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Question;
+use App\Repository\QuestionRepository;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -25,12 +26,16 @@ class QuestionController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(EntityManagerInterface $entityManager)
+    public function homepage(QuestionRepository $questionRepository)
     {
-        $questions = $entityManager->getRepository(Question::class)->findBy(
-            [], # get all
-            ['askedAt' => 'DESC'] # order by column
-        );
+//        $questions = $questionRepository->findBy(
+//            [], # get all
+//            ['askedAt' => 'DESC'] # order by column
+//        );
+
+        # Custom query
+        $questions = $questionRepository->findAllAskedOrderedByNewest();
+
         return $this->render('question/homepage.html.twig', [
             'questions' => $questions
         ]);
