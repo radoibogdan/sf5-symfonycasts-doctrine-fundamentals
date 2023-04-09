@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Question;
 use App\Service\MarkdownHelper;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,18 +25,54 @@ class QuestionController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage()
+    public function homepage(EntityManagerInterface $entityManager)
     {
-        return $this->render('question/homepage.html.twig');
+        $questions = $entityManager->getRepository(Question::class)->findBy(
+            [], # get all
+            ['askedAt' => 'DESC'] # order by column
+        );
+        return $this->render('question/homepage.html.twig', [
+            'questions' => $questions
+        ]);
+    }
+
+
+    /**
+     * @Route("/questions/new")
+     */
+    public function new(EntityManagerInterface $entityManager)
+    {
+        $question = new Question();
+        $question->setName('Missing pants')
+            ->setSlug('missing-pants-' . rand(0, 1000))
+            ->setQuestion('Description question');
+        if (rand(1,10) > 5) {
+            $question->setAskedAt(new \DateTime(sprintf('-%d days', rand(1, 100))));
+        }
+        $entityManager->persist($question);
+        $entityManager->flush();
+        return new Response(sprintf(
+            'Hello id #%d with %s slug',
+            $question->getId(),
+            $question->getSlug(),
+        ));
     }
 
     /**
      * @Route("/questions/{slug}", name="app_question_show")
      */
-    public function show($slug, MarkdownHelper $markdownHelper)
+    public function show($slug, MarkdownHelper $markdownHelper, EntityManagerInterface $entityManager)
     {
         if ($this->isDebug) {
             $this->logger->info('We are in debug mode!');
+        }
+
+        $repository = $entityManager->getRepository(Question::class);
+        /** @var Question $question */
+        $question = $repository->findOneBy(['slug' => $slug]);
+        if (!$question) {
+            // Cette erreur ne sera visible que dans l'environnement de DEV
+            throw $this->createNotFoundException(sprintf("La question after le slug %s n'existe pas", $slug));
         }
 
         $answers = [
@@ -42,13 +80,9 @@ class QuestionController extends AbstractController
             'Honestly, I like furry shoes better than MY cat',
             'Maybe... try saying the spell backwards?',
         ];
-        $questionText = 'I\'ve been turned into a cat, any *thoughts* on how to turn back? While I\'m **adorable**, I don\'t really care for cat food.';
-
-        $parsedQuestionText = $markdownHelper->parse($questionText);
 
         return $this->render('question/show.html.twig', [
-            'question' => ucwords(str_replace('-', ' ', $slug)),
-            'questionText' => $parsedQuestionText,
+            'question' => $question,
             'answers' => $answers,
         ]);
     }
