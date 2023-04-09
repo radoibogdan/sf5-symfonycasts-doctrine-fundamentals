@@ -54,6 +54,8 @@ class QuestionController extends AbstractController
         if (rand(1,10) > 5) {
             $question->setAskedAt(new \DateTime(sprintf('-%d days', rand(1, 100))));
         }
+        $question->setVotes(rand(-50, 50));
+
         $entityManager->persist($question);
         $entityManager->flush();
         return new Response(sprintf(
