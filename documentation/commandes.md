@@ -33,17 +33,28 @@ $ docker-compose exec database mysql -u root --password=password
 ```
 
 ### Installer une extension pour twig pour rendre des dates relatives ("2 dqys ago")
-``` bash
+```bash
 $ composer req knplabs/knp-time-bundle
-``` 
+```
 
 ### Créer une entité
-symfony console make:entity Question
-symfony console make:migration
-symfony console d:m:m
-
+```bash
+$ symfony console make:entity Question
+$ symfony console make:migration
+$ symfony console d:m:m
+```
 
 composer req knplabs/knp-snappy-bundle:^1.6
+
+## Fixtures
+```bash
+$ composer req orm-fixtures --dev
+$ symfony console doctrine:fixtures:load
+$ composer req zenstruck/foundry --dev
+  + Add to bundles.php
+  Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true]
+$ symfony console make:factory 
+```
 
 # Tests (pas sur ce projet)
 Jouer les tests (srs/tests):

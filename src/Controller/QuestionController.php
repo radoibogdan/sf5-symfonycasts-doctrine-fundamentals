@@ -48,22 +48,7 @@ class QuestionController extends AbstractController
      */
     public function new(EntityManagerInterface $entityManager)
     {
-        $question = new Question();
-        $question->setName('Missing pants')
-            ->setSlug('missing-pants-' . rand(0, 1000))
-            ->setQuestion('Description question');
-        if (rand(1,10) > 5) {
-            $question->setAskedAt(new \DateTime(sprintf('-%d days', rand(1, 100))));
-        }
-        $question->setVotes(rand(-50, 50));
-
-        $entityManager->persist($question);
-        $entityManager->flush();
-        return new Response(sprintf(
-            'Hello id #%d with %s slug',
-            $question->getId(),
-            $question->getSlug(),
-        ));
+        return new Response('V2 to do');
     }
 
     /**
