@@ -43,6 +43,8 @@ symfony console make:migration
 symfony console d:m:m
 
 
+composer req knplabs/knp-snappy-bundle:^1.6
+
 # Tests (pas sur ce projet)
 Jouer les tests (srs/tests):
 

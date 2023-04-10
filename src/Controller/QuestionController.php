@@ -102,10 +102,14 @@ class QuestionController extends AbstractController
     {
         $direction = $request->request->get('direction');
         if ($direction === 'up') {
-            $question->setVotes($question->getVotes()+1);
+            $question->upVote();
         } elseif($direction === 'down') {
-            $question->setVotes($question->getVotes()+1);
+            $question->downVote();
         }
-        return ;
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_question_show', [
+            'slug' => $question->getSlug()
+        ]);
     }
 }
