@@ -5,12 +5,16 @@ namespace App\Entity;
 use App\Repository\QuestionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
  */
 class Question
 {
+    # Rajoute les colonnes createdAt, updatedAt
+    use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
