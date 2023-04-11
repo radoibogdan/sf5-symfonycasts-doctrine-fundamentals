@@ -60,6 +60,15 @@ $ symfony console make:factory
 ### Faker
 [Faker Documentation][2]
 
+## Stof Bundle
+[Documentation Stof][3]
+[Stof Symfony][4]
+
+### Installation + config `stof_doctrine_extensions.yaml`
+```bash
+$ composer require stof/doctrine-extensions-bundle
+```
+
 
 # Tests (pas sur ce projet)
 Jouer les tests (srs/tests):
@@ -70,3 +79,5 @@ $ php bin/phpunit
 
 [1]: https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#reusable-model-factory-states
 [2]: https://github.com/FakerPHP/Faker
+[3]: https://github.com/stof/StofDoctrineExtensionsBundle
+[4]: https://symfony.com/bundles/StofDoctrineExtensionsBundle/current/index.html
