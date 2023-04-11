@@ -46,7 +46,8 @@ $ symfony console d:m:m
 
 composer req knplabs/knp-snappy-bundle:^1.6
 
-## Fixtures
+## Fixtures Zenstruck Foundry
+[Zenstruck Documentation][1]
 ```bash
 $ composer req orm-fixtures --dev
 $ symfony console doctrine:fixtures:load
@@ -56,6 +57,10 @@ $ composer req zenstruck/foundry --dev
 $ symfony console make:factory 
 ```
 
+### Faker
+[Faker Documentation][2]
+
+
 # Tests (pas sur ce projet)
 Jouer les tests (srs/tests):
 
@@ -63,4 +68,5 @@ Jouer les tests (srs/tests):
 $ php bin/phpunit
 ```
 
-[1]: https://symfony.com/doc/current/form/bootstrap5.html
+[1]: https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#reusable-model-factory-states
+[2]: https://github.com/FakerPHP/Faker

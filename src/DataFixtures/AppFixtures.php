@@ -11,6 +11,8 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        # unpublished change les valeurs par défaut, c'est une méthode créée
         QuestionFactory::createMany(20);
+        QuestionFactory::new()->unpublished()->many(5)->create();
     }
 }

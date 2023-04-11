@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Question;
 use App\Repository\QuestionRepository;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -36,25 +37,37 @@ final class QuestionFactory extends ModelFactory
         // TODO inject services if required (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services)
     }
 
+    public function unpublished():self
+    {
+        # Overrides default values in the getDefaults() function
+        return $this->addState(['asked_at' => null]);
+    }
+
     protected function getDefaults(): array
     {
         return [
             // TODO add your default values here (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories)
-            'name' => 'Missing pants',
-            'slug' => 'missing-pants-' . rand(0, 1000),
-            'question' => 'Description question',
-            'askedAt' => rand(1,10) > 5 ? new \DateTime(sprintf('-%d days', rand(1, 100))): null,
+            'name' => self::faker()->realText(20),
+            'question' => self::faker()->paragraphs(
+               self::faker()->numberBetween(1,4),
+               true # return as string
+            ),
+            # boolean(70) = 70% chance of getting a true value
+            'askedAt' => self::faker()->dateTimeBetween('-100 days', '-1 minute'),
             'votes' => rand(-50, 50),
         ];
-
-
     }
 
     protected function initialize(): self
     {
         // see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
         return $this
-            // ->afterInstantiate(function(Question $question): void {})
+             ->afterInstantiate(function(Question $question): void {
+                 if (!$question->getSlug()) {
+                     $slugger = new AsciiSlugger();
+                     $question->setSlug($slugger->slug($question->getName()));
+                 }
+             })
         ;
     }
 
